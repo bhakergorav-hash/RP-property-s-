@@ -2,40 +2,37 @@ name: Build RP Propertys APK
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: Code download
         uses: actions/checkout@v4
 
-      - name: Extract project
+      - name: ZIP खोलना
         run: |
-          unzip -o RP_Propertys_Ready_to_Build.zip -d app_project
+          mkdir app_project
+          unzip -q RP_Propertys_Ready_to_Build.zip -d app_project
           cd app_project
-          find . -maxdepth 3 -type f
+          ls
 
-      - name: Setup Java
+      - name: Java setup
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '17'
 
-      - name: Setup Gradle
+      - name: Gradle setup
         uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.10'
 
-      - name: Build APK
-        working-directory: app_project
-        run: gradle assembleDebug
+      - name: APK बनाना
+        run: gradle -p app_project assembleDebug
 
-      - name: Upload APK
+      - name: APK तैयार रखना
         uses: actions/upload-artifact@v4
         with:
           name: RP-Propertys-APK
